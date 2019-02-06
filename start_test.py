@@ -10,7 +10,6 @@ import time
 import psutil
 processo= "lxpanel"
 
-
 durata_test=int(raw_input("specificare la durata del test in minuti "))
 print durata_test
 durata_test_sec = durata_test*60
