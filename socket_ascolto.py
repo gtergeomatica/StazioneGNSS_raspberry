@@ -18,7 +18,7 @@ from datetime import datetime, date
 
 HOST = ''   # Symbolic name, meaning all available interfaces
 PORT = 8082 # Arbitrary non-privileged port
-BUFFER_SIZE = 1024 
+BUFFER_SIZE = 2024 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
