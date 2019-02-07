@@ -85,7 +85,7 @@ while True:
     data = conn.recv(BUFFER_SIZE)            
     #dati=data.split('|')
     print data
-    conn.send('OK\0')
+    conn.send('OK ricevuto\0')
 
 s.close()
 
