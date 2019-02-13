@@ -15,6 +15,7 @@ durata_test_sec = durata_test*60
 print durata_test_sec
 
 
+
 os.system("sudo /home/pi/Lorenzo/RTKLIB/app/rtkrcv/gcc/rtkrcv -s -p 23 -m 24 -o /home/pi/Lorenzo/RTKLIB/app/rtkrcv/gcc/narv2.conf &")
 a = []
 time.sleep(2)
@@ -29,3 +30,9 @@ print process_ID
 
 time.sleep(durata_test_sec)
 os.system("sudo kill %s" %process_ID)
+
+
+
+
+
+

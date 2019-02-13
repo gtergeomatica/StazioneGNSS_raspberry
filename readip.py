@@ -18,4 +18,4 @@ def readip(ifname):
 readip('tun0')
 
 #inidirizzo locale lan
-readip('eth0')
+#readip('eth0')
