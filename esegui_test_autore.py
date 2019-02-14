@@ -10,27 +10,33 @@
  
 import socket
 import sys
-import time
+
 import RPi.GPIO as GPIO
 import os
 import subprocess
 import time
 import psutil
+import shutil #shell utilities
 
-from datetime import datetime, date
+from datetime import datetime,  date
 
 
 
 
-def start_test(author, time):
+def start_test(author, tempo):
     #durata_test = int(dati[1]) #specificare la durata del test in minuti (o leggo il dato da scrivi_configurazine.php)
-    durata_test = time
+    durata_test = int(tempo)
     print durata_test
     durata_test_sec = durata_test*60
     print durata_test_sec
+    autore = author
+
+    time.sleep(1)
 
 
-    os.system("sudo /home/pi/Lorenzo/RTKLIB/app/rtkrcv/gcc/rtkrcv -s -p 23 -m 24 -o /home/pi/Lorenzo/RTKLIB/app/rtkrcv/gcc/prova_%s.conf &" %author)
+    run_rtkrcv = "sudo /home/pi/Lorenzo/RTKLIB/app/rtkrcv/gcc/rtkrcv -s -p 23 -m 24 -o /home/pi/Lorenzo/code/StazioneGNSS_raspberry/configurazioni_output/prova_{0}.conf &" .format(autore)
+    print run_rtkrcv
+    os.system(run_rtkrcv)
     a = []
     time.sleep(2)
     processi = filter(lambda p: p.name() == "rtkrcv", psutil.process_iter())
@@ -44,6 +50,38 @@ def start_test(author, time):
 
     time.sleep(durata_test_sec)
     os.system("sudo kill %s" %process_ID)
+
+
+
+def scriviConfig (p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13):
+    #prendo i parametri e li salvo in un array
+    parametri = [p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13]
+
+    #copio il file su una cartella di rete
+    #shutil.copy("./prova.conf", "../progetti_convegni/ricerca/2018_2022_PhD_Lorenzo/stazione_permanente/configurazioni/prova_{0}.conf".format(p1))   #copio il file prova conf e lo rinomino con il nome dell'autore
+    #copio il file il locale
+    shutil.copy("./prova.conf", "./configurazioni_output/prova_{0}.conf".format(p1))   #copio il file prova conf e lo rinomino con il nome dell'autore
+
+    testo_config = ['=pos1-posmode', '=pos1-elmask', '=pos1-ionoopt', '=pos1-tropopt', '=pos1-sateph', '=pos1-navsys', '=out-solformat', '=out-timesys', '=out-timeform', '=out-height', '=out-geoid', '=outstr1-format']
+
+    #percorso cartella di rete
+    #config_autore = '../progetti_convegni/ricerca/2018_2022_PhD_Lorenzo/stazione_permanente/configurazioni/prova_{0}.conf'.format(p1)
+    #percorso in locale
+    config_autore ='./configurazioni_output/prova_{0}.conf'.format(p1)
+
+
+    for i, j in zip(parametri, testo_config):
+        with open(config_autore, 'r') as config:
+            config_nuova = config.read()
+            config_nuova = config_nuova.replace('%s' %j, '=%s' %i)
+        with open(config_autore, 'w') as config:
+            config.write(config_nuova)
+    #per ultimo e fuori dal ciclo aggiungo il nome autore
+    with open(config_autore, 'r') as config:
+        config_nuova = config.read()
+        config_nuova = config_nuova.replace('/test_villa', '/test_%s' % p1)
+    with open(config_autore, 'w') as config:
+        config.write(config_nuova)
 
 
 
@@ -138,6 +176,7 @@ def main():
 
         print data
         print dati
+
         print nome_autore
         print pos1_posmode
         print pos1_elmask
@@ -148,18 +187,30 @@ def main():
         print out_solformat
         print out_timesys
         print out_timeform
+        print out_height
         print out_geoid
         print outstr1_format
         print durata_test
 
+        print "scrittura della configurazione"
+
+        scriviConfig(nome_autore, pos1_posmode, pos1_elmask, pos1_ionoopt, pos1_tropopt, pos1_sateph, pos1_navsys, out_solformat, out_timesys, out_timeform, out_height, out_geoid, outstr1_format)
+
+        print "fine scrittura della configurazione"
 
 
+
+        print "inizio del test"
+
+        start_test(nome_autore, durata_test)
+
+        print "fine del test"
 
 
         conn.send('OK ricevuto\0')
         
         #start_test()
-    s.close()
+    #s.close()
 
 
 if __name__ == "__main__":
