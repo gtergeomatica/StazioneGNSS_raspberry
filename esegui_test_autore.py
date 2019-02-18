@@ -45,7 +45,7 @@ def start_test(author, tempo):
         print i.name, i.pid, a
 
 
-    process_ID = a[0]
+    process_ID = a[-1] #se ci sono piu processi rtkrcv attivi, i PID vengono messi tutti in questo array; il processo di cu mi interessa sapere il PID (perche' e' il processo rtkrcv che sto lanciando in questo momento) e' l'ultimo elemento di questo array.
     print process_ID
 
     time.sleep(durata_test_sec)
