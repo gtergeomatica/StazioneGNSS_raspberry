@@ -51,6 +51,12 @@ def start_test(author, tempo):
     time.sleep(durata_test_sec)
     os.system("sudo kill %s" %process_ID)
 
+def inviaTest (author):
+    nome_file_output= 'test_{0}.pos'.format(author)
+    run_inviaTest = "python /home/pi/Lorenzo/code/StazioneGNSS_raspberry/risultati_test/send_results.py {0}" .format(nome_file_output)
+    print run_inviaTest
+    os.system(run_inviaTest)
+
 
 
 def scriviConfig (p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13):
@@ -205,6 +211,8 @@ def main():
         start_test(nome_autore, durata_test)
 
         print "fine del test"
+        print "invio del test"
+        inviaTest (nome_autore)
 
 
         conn.send('OK ricevuto\0')
