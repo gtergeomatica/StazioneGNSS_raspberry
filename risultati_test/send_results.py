@@ -7,12 +7,12 @@ port = 8085           # Reserve a port for your service every new transfer wants
 
 s.connect((host, port))
 #s.send("Hello server!") 
-nomefile =  sys.argv[1]
+nomefile =  sys.argv[1]  #This script should be in the same folder of the file you want to send
 print(nomefile)
 s.send(nomefile)
 path='/home/pi/Lorenzo/code/StazioneGNSS_raspberry/risultati_test'
-filename='test_marco_201902191715.pos' #In the same folder or path is this file running must the file you want to tranfser to be
-f = open('{0}/{1}'.format(path,filename),'rb')
+
+f = open('{0}/{1}'.format(path,nomefile),'rb')
 l = f.read(1024)
 while (l):
     s.send(l)
